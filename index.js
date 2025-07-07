@@ -8,9 +8,16 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
+
+const path = await import('path');
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Serve status.html at root
+app.get('/', (req, res) => {
+  res.sendFile(path.resolve(process.cwd(), 'status.html'));
+});
 
 // Get all courts
 app.get('/api/courts', async (req, res) => {
@@ -149,4 +156,4 @@ app.delete('/api/bookings/:id', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`)); 
+app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));
