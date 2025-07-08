@@ -1,17 +1,11 @@
-import express from 'express';
-import pkg from 'pg';
-const { Pool } = pkg;
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-});
-
-
-const path = await import('path');
 const express = require("express");
+const { Pool } = require("pg");
+const path = require("path");
+require("dotenv").config();
+
 const app = express();
 
+// ✅ CORS middleware
 const allowedOrigins = [
   "https://courtly-eight.vercel.app",
   "http://localhost:3000"
@@ -22,18 +16,20 @@ app.use((req, res, next) => {
   if (allowedOrigins.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
-
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);
   }
-
   next();
 });
 
 app.use(express.json());
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
 
 
 // Serve status.html at root
