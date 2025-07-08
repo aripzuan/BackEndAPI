@@ -1,5 +1,4 @@
 import express from 'express';
-import cors from 'cors';
 import pkg from 'pg';
 const { Pool } = pkg;
 
@@ -11,7 +10,15 @@ const pool = new Pool({
 
 const path = await import('path');
 const app = express();
-app.use(cors());
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://courtly-eight.vercel.app");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200); // Handle preflight
+  }
+  next();
+});
 app.use(express.json());
 
 // Serve status.html at root
