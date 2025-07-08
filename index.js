@@ -2,14 +2,16 @@ const express = require("express");
 const { Pool } = require("pg");
 const path = require("path");
 
+// Create Express app
 const app = express();
 
+// PostgreSQL pool setup
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false } // required for hosted DBs (e.g. Supabase, Neon)
 });
 
-// ✅ CORS middleware
+// CORS Middleware
 const allowedOrigins = [
   "https://courtly-eight.vercel.app",
   "http://localhost:3000"
@@ -26,14 +28,18 @@ app.use((req, res, next) => {
   next();
 });
 
+// Parse JSON bodies
 app.use(express.json());
 
-// ✅ Serve status.html at root
+// ✅ Serve status.html (health check)
 app.get("/", (req, res) => {
   res.sendFile(path.resolve(process.cwd(), "status.html"));
 });
 
-// ✅ COURTS
+
+// =======================
+// ✅ COURT ROUTES
+// =======================
 
 app.get("/api/courts", async (req, res) => {
   try {
@@ -93,7 +99,10 @@ app.delete("/api/courts/:id", async (req, res) => {
   }
 });
 
-// ✅ BOOKINGS
+
+// =======================
+// ✅ BOOKING ROUTES
+// =======================
 
 app.get("/api/bookings", async (req, res) => {
   const { user_id } = req.query;
@@ -165,6 +174,5 @@ app.delete("/api/bookings/:id", async (req, res) => {
   }
 });
 
-// ✅ Server listening
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ API running on http://localhost:${PORT}`));
+// ✅ Required for Vercel
+module.exports = app;
