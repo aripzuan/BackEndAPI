@@ -7,6 +7,11 @@ const { Pool } = require("pg");
 const { DATABASE_URL } = process.env;
 
 let app = express();
+var corsOptions = {
+  origin: "https://courtly-eight.vercel.app"
+};
+
+app.use(cors(corsOptions));
 app.use(cors());
 app.use(express.json());
 
