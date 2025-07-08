@@ -1,26 +1,18 @@
-let express = require("express");
-let path = require("path");
-const cors = require("cors");
-require("dotenv").config();
-
-const { Pool } = require("pg");
-const { DATABASE_URL } = process.env;
-
-let app = express();
-var corsOptions = {
-  origin: "https://courtly-eight.vercel.app"
-};
-
-app.use(cors(corsOptions));
-app.use(cors());
-app.use(express.json());
+import express from 'express';
+import cors from 'cors';
+import pkg from 'pg';
+const { Pool } = pkg;
 
 const pool = new Pool({
-  connectionString: DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
 });
+
+
+const path = await import('path');
+const app = express();
+app.use(cors());
+app.use(express.json());
 
 // Serve status.html at root
 app.get('/', (req, res) => {
