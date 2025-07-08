@@ -11,11 +11,7 @@ const pool = new Pool({
 
 const path = await import('path');
 const app = express();
-app.use(cors({
-  origin: 'https://courtly-eight.vercel.app', // <- explicitly allow only your frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true
-}));
+app.use(cors())
 app.use(express.json());
 
 // Serve status.html at root
