@@ -11,6 +11,7 @@ const pool = new Pool({
 
 const path = await import('path');
 const app = express();
+const cors = require('cors');
 app.use(cors())
 app.use(express.json());
 
